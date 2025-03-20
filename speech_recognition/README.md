@@ -11,6 +11,14 @@ conda env create -f environment.yml
 conda activate speech_recognition
 ```
 
+### ReazonSpeechのインストール
+ReazonSpeechの公式ページに従ってインストールします。
+```
+cd speech_recognition/libs
+git clone https://github.com/reazon-research/ReazonSpeech
+pip install ReazonSpeech/pkg/nemo-asr  # or k2-asr, espnet-asr or espnet-oneseg
+```
+
 ## 実行方法
 
 音声認識を実行するには、ai_explore直下でscriptsディレクトリにあるファイルを実行します。
