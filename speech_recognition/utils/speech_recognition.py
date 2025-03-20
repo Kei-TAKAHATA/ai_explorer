@@ -1,5 +1,7 @@
 import whisper
 
+from reazonspeech.nemo.asr import transcribe, audio_from_path, load_model
+
 
 class SpeechRecognition:
     """
@@ -41,6 +43,39 @@ class SpeechRecognition:
         # 音声認識結果を返す
         return recognition_result
 
+    def execute_reazon(self, file_path, settings):
+        """
+        Reazonモデルを使用して音声ファイルを音声認識
+
+        Parameters
+        ----------
+        file_path : str
+            トランスクリプトする音声ファイルのパス。
+        settings : dict
+            音声認識の設定を含む辞書。以下のキーを含むことができます:
+            - reazon_device : str
+                モデルを実行するデバイス。
+
+        Returns
+        -------
+        recognition_result
+            音声認識の結果
+        """
+        # 音声ファイルをロード
+        audio = audio_from_path(file_path)
+
+        # デバイスの設定を取得
+        device = settings["reazon_device"]
+
+        # モデルをロード
+        model = load_model(device=device)
+
+        # 音声ファイルを音声認識
+        recognition_result = transcribe(model, audio)
+
+        # 音声認識結果を返す
+        return recognition_result
+
     def execute_speech_recognition(self, file_path, model_name, settings):
         """
         指定されたモデルを使用して音声認識を実行します。
@@ -66,11 +101,15 @@ class SpeechRecognition:
                 model_name=model_name,
                 settings=settings,
             )
-            return recognition_result
-        # elif model_name == "reazon":
-        #     recognition_result = self.execute_reazon(file_path, settings)
-        #     return recognition_result
-        raise ValueError(f"Unsupported model: {model_name}")
+        elif model_name == "reazon":
+            recognition_result = self.execute_reazon(
+                file_path=file_path,
+                settings=settings,
+            )
+        else:
+            raise ValueError(f"Unsupported model: {model_name}")
+
+        return recognition_result
 
     def print_recognition_result(self, recognition_result, model_name):
         """
@@ -85,5 +124,8 @@ class SpeechRecognition:
             for segment in recognition_result["segments"]:
                 segment_id, start, end, text = [segment[key] for key in ["id", "start", "end", "text"]]
                 print(f"{segment_id:03}: {start:5.1f} - {end:5.1f} | {text}")
+        elif "reazon" in model_name:
+            for segment in recognition_result.segments:
+                print("%5.2f %5.2f %s" % (segment.start_seconds, segment.end_seconds, segment.text))
         else:
             raise ValueError(f"Unsupported model: {model_name}")
