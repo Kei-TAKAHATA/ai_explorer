@@ -1,4 +1,7 @@
 # Pythonキャッシュファイル
 *.pyc
 
+# macOSの隠しファイル
+.DS_Store
+
 *.wav
