@@ -5,16 +5,9 @@ import os
 # プロジェクトのルートディレクトリをパスに追加
 # sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../..')))
 
-import yaml
 from speech_recognition.utils.speech_recognition import SpeechRecognition
 from speech_recognition.utils.file_list_generator import FileListGenerator
-
-
-def load_settings(base_dir, file_path):
-    """設定ファイルを読み込む"""
-    with open(os.path.join(base_dir, file_path), 'r', encoding='utf-8') as file:
-        settings = yaml.safe_load(file)
-    return settings
+from speech_recognition.utils.settings_loader import load_settings
 
 
 def main():
