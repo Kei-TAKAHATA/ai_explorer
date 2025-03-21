@@ -2,9 +2,10 @@ import numpy as np
 
 
 class KalmanFilter:
-    def __init__(self, F: np.ndarray, H: np.ndarray, Q: np.ndarray, R: np.ndarray, initial_state: np.ndarray, initial_covariance: np.ndarray) -> None:
+    def __init__(self, F: np.ndarray, H: np.ndarray, Q: np.ndarray, R: np.ndarray,
+                 initial_state: np.ndarray, initial_covariance: np.ndarray) -> None:
         """
-        初期化
+        カルマンフィルタの初期化
 
         Parameters
         ----------
@@ -25,47 +26,74 @@ class KalmanFilter:
         self.H = H
         self.Q = Q
         self.R = R
-        self.state_estimate = initial_state
-        self.covariance_estimate = initial_covariance
+        self.x = initial_state  # 状態推定値 (x)
+        self.P = initial_covariance  # 共分散推定値 (P)
 
-    def predict(self) -> None:
+    def predict(self, control_input: np.ndarray = None, B: np.ndarray = None) -> None:
         """
-        予測ステップ
+        予測ステップ（Prediction Step）
 
-        Updates the state estimate and covariance estimate based on the model.
+        制御入力を考慮して、状態推定値と共分散を予測する。
+
+        - 状態予測:
+          \hat{x}_{k|k-1} = F x_{k-1} + B u_k
+        - 共分散予測:
+          P_{k|k-1} = F P_{k-1} F^T + Q
+
+        Parameters
+        ----------
+        control_input : np.ndarray, optional
+            制御入力ベクトル (u_k)
+        B : np.ndarray, optional
+            制御行列 (B)
         """
         # 状態予測
-        self.state_estimate = self.F @ self.state_estimate
+        self.x = self.F @ self.x
+        if control_input is not None and B is not None:
+            self.x += B @ control_input  # B u_k の計算
 
         # 共分散予測
-        self.covariance_estimate = self.F @ self.covariance_estimate @ self.F.T + self.Q
+        self.P = self.F @ self.P @ self.F.T + self.Q
 
-    def update(self, observation: np.ndarray) -> None:
+    def update(self, observation: np.ndarray, use_pinv: bool = True) -> None:
         """
-        更新ステップ
+        更新ステップ（Update Step）
+
+        観測値を用いて推定値を修正する。
+
+        - 観測の予測値（イノベーション）:
+          y_k = z_k - H \hat{x}_{k|k-1}
+        - 観測の予測共分散:
+          S_k = H P_{k|k-1} H^T + R
+        - カルマンゲイン:
+          K_k = P_{k|k-1} H^T S_k^{-1}
+        - 状態更新:
+          x_k = \hat{x}_{k|k-1} + K_k y_k
+        - 共分散更新:
+          P_k = (I - K_k H) P_{k|k-1}
 
         Parameters
         ----------
         observation : np.ndarray
-            観測値
-
-        Updates the state estimate and covariance estimate using the observation.
+            観測値 (z_k)
+        use_pinv : bool, optional
+            逆行列の計算に擬似逆行列 (pinv) を使用するか。デフォルトは True。
         """
-        # 観測の予測値
-        observation_predict = self.H @ self.state_estimate
+        # 観測の予測値（イノベーション）
+        y = observation - self.H @ self.x
 
-        # 観測予測の共分散
-        S = self.H @ self.covariance_estimate @ self.H.T + self.R
+        # 観測の予測共分散
+        S = self.H @ self.P @ self.H.T + self.R
 
-        # カルマンゲイン（擬似逆行列を使用）
-        K = self.covariance_estimate @ self.H.T @ np.linalg.pinv(S)
+        # カルマンゲイン
+        K = self.P @ self.H.T @ (np.linalg.pinv(S) if use_pinv else np.linalg.inv(S))
 
         # 状態更新
-        self.state_estimate += K @ (observation - observation_predict)
+        self.x += K @ y
 
         # 共分散更新
-        identity_matrix = np.eye(self.covariance_estimate.shape[0])
-        self.covariance_estimate = (identity_matrix - K @ self.H) @ self.covariance_estimate
+        I = np.eye(self.P.shape[0])
+        self.P = (I - K @ self.H) @ self.P
 
     def get_state_estimate(self) -> np.ndarray:
         """
@@ -74,6 +102,6 @@ class KalmanFilter:
         Returns
         -------
         np.ndarray
-            現在の状態推定値
+            現在の状態推定値 (x_k)
         """
-        return self.state_estimate
+        return self.x
