@@ -10,3 +10,6 @@
 # テキストファイル
 *.tsv
 *.csv
+
+# notebookのチェックポイント
+.ipynb_checkpoints
