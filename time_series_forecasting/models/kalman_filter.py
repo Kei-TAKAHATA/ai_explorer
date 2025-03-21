@@ -47,12 +47,12 @@ class KalmanFilter:
         B : np.ndarray, optional
             制御行列 (B)
         """
-        # 状態予測
+        # 状態予測（Xk_ = F * Xk-1 + B * u_k）
         self.state_estimate = self.F @ self.state_estimate
         if control_input is not None and B is not None:
             self.state_estimate += B @ control_input  # B u_k の計算
 
-        # 共分散予測
+        # 共分散予測（Pk_ = F * Pk-1 * F^T + Q）
         self.covariance_estimate = self.F @ self.covariance_estimate @ self.F.T + self.Q
 
     def update(self, observation: np.ndarray, use_pinv: bool = True) -> None:
@@ -79,19 +79,19 @@ class KalmanFilter:
         use_pinv : bool, optional
             逆行列の計算に擬似逆行列 (pinv) を使用するか。デフォルトは True。
         """
-        # 観測の予測値（イノベーション）
+        # 観測の予測値（イノベーション）（yk = zk - H * Xk_）
         innovation = observation - self.H @ self.state_estimate
 
-        # 観測の予測共分散
+        # 観測の予測共分散（Sk = H * Pk_ * H^T + R）
         innovation_covariance = self.H @ self.covariance_estimate @ self.H.T + self.R
 
-        # カルマンゲイン
+        # カルマンゲイン（Kk = Pk_ * H^T * (H * Pk_ * H^T + R)^-1）
         kalman_gain = self.covariance_estimate @ self.H.T @ (np.linalg.pinv(innovation_covariance) if use_pinv else np.linalg.inv(innovation_covariance))
 
-        # 状態更新
+        # 状態更新（Xk = Xk_ + Kk * zk - H * Xk_）
         self.state_estimate += kalman_gain @ innovation
 
-        # 共分散更新
+        # 共分散更新（Pk = (I - Kk * H) * Pk_）
         identity_matrix = np.eye(self.covariance_estimate.shape[0])
         self.covariance_estimate = (identity_matrix - kalman_gain @ self.H) @ self.covariance_estimate
 
