@@ -22,12 +22,12 @@ class KalmanFilter:
         initial_covariance : np.ndarray
             初期状態の共分散行列
         """
-        self.F = F
-        self.H = H
-        self.Q = Q
-        self.R = R
-        self.x = initial_state  # 状態推定値 (x)
-        self.P = initial_covariance  # 共分散推定値 (P)
+        self.F = F  # 状態遷移行列
+        self.H = H  # 観測行列
+        self.Q = Q  # 状態ノイズの共分散行列
+        self.R = R  # 観測ノイズの共分散行列
+        self.state_estimate = initial_state  # 状態推定値 (x)
+        self.covariance_estimate = initial_covariance  # 共分散推定値 (P)
 
     def predict(self, control_input: np.ndarray = None, B: np.ndarray = None) -> None:
         """
@@ -48,12 +48,12 @@ class KalmanFilter:
             制御行列 (B)
         """
         # 状態予測
-        self.x = self.F @ self.x
+        self.state_estimate = self.F @ self.state_estimate
         if control_input is not None and B is not None:
-            self.x += B @ control_input  # B u_k の計算
+            self.state_estimate += B @ control_input  # B u_k の計算
 
         # 共分散予測
-        self.P = self.F @ self.P @ self.F.T + self.Q
+        self.covariance_estimate = self.F @ self.covariance_estimate @ self.F.T + self.Q
 
     def update(self, observation: np.ndarray, use_pinv: bool = True) -> None:
         """
@@ -80,20 +80,20 @@ class KalmanFilter:
             逆行列の計算に擬似逆行列 (pinv) を使用するか。デフォルトは True。
         """
         # 観測の予測値（イノベーション）
-        y = observation - self.H @ self.x
+        innovation = observation - self.H @ self.state_estimate
 
         # 観測の予測共分散
-        S = self.H @ self.P @ self.H.T + self.R
+        innovation_covariance = self.H @ self.covariance_estimate @ self.H.T + self.R
 
         # カルマンゲイン
-        K = self.P @ self.H.T @ (np.linalg.pinv(S) if use_pinv else np.linalg.inv(S))
+        kalman_gain = self.covariance_estimate @ self.H.T @ (np.linalg.pinv(innovation_covariance) if use_pinv else np.linalg.inv(innovation_covariance))
 
         # 状態更新
-        self.x += K @ y
+        self.state_estimate += kalman_gain @ innovation
 
         # 共分散更新
-        I = np.eye(self.P.shape[0])
-        self.P = (I - K @ self.H) @ self.P
+        identity_matrix = np.eye(self.covariance_estimate.shape[0])
+        self.covariance_estimate = (identity_matrix - kalman_gain @ self.H) @ self.covariance_estimate
 
     def get_state_estimate(self) -> np.ndarray:
         """
@@ -104,4 +104,4 @@ class KalmanFilter:
         np.ndarray
             現在の状態推定値 (x_k)
         """
-        return self.x
+        return self.state_estimate
