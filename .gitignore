@@ -4,4 +4,12 @@
 # macOSの隠しファイル
 .DS_Store
 
+# 音声ファイル
 *.wav
+
+# テキストファイル
+*.tsv
+*.csv
+
+# notebookのチェックポイント
+.ipynb_checkpoints
