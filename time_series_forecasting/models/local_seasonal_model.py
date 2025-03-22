@@ -1,6 +1,6 @@
 import numpy as np
 
-import time_series_forecasting.models.kalman_filter as kalman_filter
+from time_series_forecasting.models import kalman_filter
 
 
 class LocalSeasonalModel:
