@@ -1,4 +1,5 @@
 import numpy as np
+import pandas as pd
 
 from time_series_forecasting.models import kalman_filter
 
@@ -50,22 +51,22 @@ class LocalSeasonalModel:
         number_of_seasonal_periods = len(self.seasonal_periods)
         state_dimension = 1 + 1 + number_of_seasonal_periods * 2
         observation_dimension = 1
-        print("state_dimension:", state_dimension)
+        # print("state_dimension:", state_dimension)
 
         # 初期値の設定
         self.initial_state = np.zeros((state_dimension, 1))
         self.initial_covariance = np.eye(state_dimension) * 0.1
 
         self.F = self.create_state_transition_matrix(self.seasonal_periods)  # 状態遷移行列
-        print("F の shape:", self.F.shape)  # 確認
+        # print("F の shape:", self.F.shape)  # 確認
         self.H = np.ones((1, state_dimension))  # 観測行列 H（出数を観測）
-        print("H の shape:", self.H.shape)  # 確認
+        # print("H の shape:", self.H.shape)  # 確認
 
         self.Q = np.eye(state_dimension) * self.sigma2_eta  # 状態ノイズの共分散行列
-        print("Q の shape:", self.Q.shape)  # 確認
+        # print("Q の shape:", self.Q.shape)  # 確認
 
         self.R = self.sigma2_e * np.eye(observation_dimension)  # 観測ノイズの共分散行列
-        print("R の shape:", self.R.shape)  # 確認
+        # print("R の shape:", self.R.shape)  # 確認
 
         # カルマンフィルタの初期化
         self.kf = kalman_filter.KalmanFilter(
@@ -131,9 +132,9 @@ class LocalSeasonalModel:
             self.kf.update(observation=observation)  # 更新ステップ
             self.filtered_states.append(self.kf.get_state_estimate())
 
-    def predict(self, steps: int = 1) -> list[float]:
+    def predict_by_steps(self, steps: int = 1) -> list[float]:
         """
-        将来の値を予測
+        ステップ数分の予測を行う
 
         Parameters
         ----------
@@ -160,3 +161,13 @@ class LocalSeasonalModel:
         predict_values = [self.H @ state for state in forecasted_states]
         predict_values = [value.item() for value in predict_values]  # スカラー値をリストに変換
         return predict_values
+
+    def predict_from_df(self, df: pd.DataFrame) -> pd.DataFrame:
+        """
+        観測データのdfから予測を行い、予測結果を新しい列として追加したDataFrameを返す
+        """
+        steps = len(df)
+        predict_values = self.predict_by_steps(steps=steps)
+        # 予測結果を新しい列として追加
+        df['predicted_values'] = predict_values
+        return df
