@@ -19,10 +19,22 @@ class LocalSeasonalModel:
         観測誤差の分散
     sigma2_eta : float
         状態誤差の分散
+    sigma2_s : float
+        季節誤差の分散
+    non_seasonal_dim : int
+        季節成分以外の状態の次元数
     seasonal_periods : list[int]
         季節成分の周期
     """
-    def __init__(self, y: np.ndarray, sigma2_e: float = None, sigma2_eta: float = None, sigma2_s: float = None, non_seasonal_dim: int = 1, seasonal_periods: list[int] = None):
+    def __init__(
+        self,
+        y: np.ndarray,
+        sigma2_e: float = None,
+        sigma2_eta: float = None,
+        sigma2_s: float = None,
+        non_seasonal_dim: int = 1,
+        seasonal_periods: list[int] = None
+    ):
         """
         コンストラクタ
 
@@ -36,6 +48,8 @@ class LocalSeasonalModel:
             状態誤差の分散
         sigma2_s : float, optional
             季節誤差の分散
+        non_seasonal_dim : int, optional
+            季節成分以外の状態の次元数
         seasonal_periods : list[int], optional
             季節成分の周期
         """
