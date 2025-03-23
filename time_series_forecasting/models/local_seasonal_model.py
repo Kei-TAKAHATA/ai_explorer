@@ -47,9 +47,11 @@ class LocalSeasonalModel:
         # 季節誤差の分散
         # self.sigma2_s = sigma2_s  # 季節誤差の分散
 
+        # 季節成分以外の状態の次元数（状態のみ）
+        self.non_seasonal_dim = 1
         self.seasonal_periods = seasonal_periods  # 季節成分の周期
         number_of_seasonal_periods = len(self.seasonal_periods)
-        state_dimension = 1 + 1 + number_of_seasonal_periods * 2
+        state_dimension = self.non_seasonal_dim + 2 * number_of_seasonal_periods
         observation_dimension = 1
         # print("state_dimension:", state_dimension)
 
@@ -112,15 +114,14 @@ class LocalSeasonalModel:
         """
         seasonal_weights = [self.create_seasonal_weights(term) for term in seasonal_periods]
 
-        # 状態空間の次元数を決定 (バイアスとトレンド: 2, 各季節成分: 2)
+        # 状態空間の次元数を決定 (バイアス, 各季節成分: 2)
         num_seasonal_components = len(seasonal_weights)
-        state_dim = 2 + 2 * num_seasonal_components  # バイアスとトレンド成分 + 季節成分の合計
+        state_dim = self.non_seasonal_dim + 2 * num_seasonal_components  # バイアス成分 + 季節成分の合計
 
         # ブロック行列の構築
         F = np.eye(state_dim)  # 対角成分は単位行列で初期化
-
         for i, seasonal_weight in enumerate(seasonal_weights):
-            start_idx = 2 + 2 * i  # 季節成分の開始インデックス
+            start_idx = self.non_seasonal_dim + 2 * i  # 季節成分の開始インデックス
             F[start_idx:start_idx + 2, start_idx:start_idx + 2] = seasonal_weight  # 季節成分の遷移を設定
 
         return F
