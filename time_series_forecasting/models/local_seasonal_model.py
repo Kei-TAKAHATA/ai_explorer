@@ -22,7 +22,7 @@ class LocalSeasonalModel:
     seasonal_periods : list[int]
         季節成分の周期
     """
-    def __init__(self, y: np.ndarray, sigma2_e: float = None, sigma2_eta: float = None, sigma2_s: float = None, seasonal_periods: list[int] = None):
+    def __init__(self, y: np.ndarray, sigma2_e: float = None, sigma2_eta: float = None, sigma2_s: float = None, non_seasonal_dim: int = 1, seasonal_periods: list[int] = None):
         """
         コンストラクタ
 
@@ -48,7 +48,7 @@ class LocalSeasonalModel:
         # self.sigma2_s = sigma2_s  # 季節誤差の分散
 
         # 季節成分以外の状態の次元数（状態のみ）
-        self.non_seasonal_dim = 1
+        self.non_seasonal_dim = non_seasonal_dim
         self.seasonal_periods = seasonal_periods  # 季節成分の周期
         number_of_seasonal_periods = len(self.seasonal_periods)
         state_dimension = self.non_seasonal_dim + 2 * number_of_seasonal_periods
