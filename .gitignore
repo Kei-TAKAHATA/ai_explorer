@@ -14,5 +14,8 @@
 # notebookのチェックポイント
 .ipynb_checkpoints
 
+# mdcファイル
+*.mdc
+
 # secret_directoryの追加
 secret_directory/
