@@ -1,0 +1,16 @@
+dir:
+  datasets_dir: "datasets"
+  input_dir: "using_data"
+  output_dir: "outputs"
+
+data:
+  train_data_name: "train.csv"
+  test_data_name: "test.csv"
+  target_columns: ["target_column"]
+  output_file_base_name: "test1"
+
+model:
+  model_name: "local_seasonal_model"
+  model_params:
+    seasonal_periods: [7, 30, 91, 365]
+    include_trend: true
