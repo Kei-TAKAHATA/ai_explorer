@@ -187,12 +187,20 @@ class LocalSeasonalModel:
         predict_values = [value.item() for value in predict_values]  # スカラー値をリストに変換
         return predict_values
 
-    def predict_from_df(self, df: pd.DataFrame) -> pd.DataFrame:
+    def predict_from_df(self, df: pd.DataFrame, predict_column_names: list[str] = ["predicted_values"]) -> pd.DataFrame:
         """
         観測データのdfから予測を行い、予測結果を新しい列として追加したDataFrameを返す
+
+        Parameters
+        ----------
+        df : pd.DataFrame
+            観測データのDataFrame
+        predict_column_names : list[str], optional
+            予測結果を追加する列名
         """
         steps = len(df)
         predict_values = self.predict_by_steps(steps=steps)
         # 予測結果を新しい列として追加
-        df['predicted_values'] = predict_values
+        for predict_column_name, predict_value in zip(predict_column_names, predict_values):
+            df[predict_column_name] = predict_value
         return df
