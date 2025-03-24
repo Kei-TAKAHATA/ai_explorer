@@ -112,21 +112,21 @@ class LocalSeasonalModel:
             non_seasonal_dim = train_x.shape[1]
         state_dimension = non_seasonal_dim + 2 * number_of_seasonal_periods
         observation_dimension = train_y.shape[1]  # 観測データの次元数に基づく
-        print("state_dimension:", state_dimension)
-        print("observation_dimension:", observation_dimension)
+        # print("state_dimension:", state_dimension)
+        # print("observation_dimension:", observation_dimension)
 
         # 初期値の設定
         initial_state = np.zeros((state_dimension, 1))
         initial_covariance = np.eye(state_dimension) * 0.1
 
         self.F = self.create_state_transition_matrix(non_seasonal_dim, self.seasonal_periods)  # 状態遷移行列
-        print("F の shape:", self.F.shape)  # 確認
+        # print("F の shape:", self.F.shape)  # 確認
         self.H = np.ones((observation_dimension, state_dimension))  # 観測行列 H
-        print("H の shape:", self.H.shape)  # 確認
+        # print("H の shape:", self.H.shape)  # 確認
         self.Q = sigma2_eta * np.eye(state_dimension)  # 状態ノイズの共分散行列
-        print("Q の shape:", self.Q.shape)  # 確認
+        # print("Q の shape:", self.Q.shape)  # 確認
         self.R = sigma2_e * np.eye(observation_dimension)  # 観測ノイズの共分散行列
-        print("R の shape:", self.R.shape)  # 確認
+        # print("R の shape:", self.R.shape)  # 確認
 
         # カルマンフィルタの初期化
         self.kf = kalman_filter.KalmanFilter(
@@ -137,8 +137,8 @@ class LocalSeasonalModel:
         for observation in train_y:
             if observation.ndim == 1:
                 observation = observation.reshape(-1, 1)
-            print("observation:", observation)
-            print("observation.shape:", observation.shape)
+            # print("observation:", observation)
+            # print("observation.shape:", observation.shape)
             self.kf.predict()  # 予測ステップ
             self.kf.update(observation=observation)  # 更新ステップ
             self.filtered_states.append(self.kf.get_state_estimate())
@@ -197,7 +197,6 @@ class LocalSeasonalModel:
         steps = len(df)
         predict_values = self.predict_by_steps(steps=steps)
 
-        # import pdb; pdb.set_trace()
         # 予測結果を新しい列として追加
         predict_df = pd.DataFrame(predict_values, columns=predict_column_names)
         df = pd.concat([df, predict_df], axis=1)
