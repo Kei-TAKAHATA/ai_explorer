@@ -32,8 +32,9 @@ class LocalSeasonalModel:
         sigma2_e: float = None,
         sigma2_eta: float = None,
         sigma2_s: float = None,
-        non_seasonal_dim: int = 1,
-        seasonal_periods: list[int] = None
+        non_seasonal_dim: int = 2,
+        seasonal_periods: list[int] = None,
+        include_trend: bool = True
     ):
         """
         コンストラクタ
@@ -50,8 +51,11 @@ class LocalSeasonalModel:
             季節誤差の分散
         non_seasonal_dim : int, optional
             季節成分以外の状態の次元数
+            デフォルトでは2（バイアスとトレンド）
         seasonal_periods : list[int], optional
             季節成分の周期
+        include_trend : bool, optional
+            トレンドを含めるかどうかの設定
         """
         self.y = y  # 観測データ
         # 状態誤差の分散
@@ -73,6 +77,7 @@ class LocalSeasonalModel:
         self.initial_state = np.zeros((state_dimension, 1))
         self.initial_covariance = np.eye(state_dimension) * 0.1
 
+        self.include_trend = include_trend  # トレンドを含めるかどうかの設定
         self.F = self.create_state_transition_matrix(self.seasonal_periods)  # 状態遷移行列
         # print("F の shape:", self.F.shape)  # 確認
         self.H = np.ones((1, state_dimension))  # 観測行列 H（出数を観測）
@@ -132,8 +137,10 @@ class LocalSeasonalModel:
         num_seasonal_components = len(seasonal_weights)
         state_dim = self.non_seasonal_dim + 2 * num_seasonal_components  # バイアス成分 + 季節成分の合計
 
-        # ブロック行列の構築
+        # 状態遷移行列の構築
         F = np.eye(state_dim)  # 対角成分は単位行列で初期化
+        if self.include_trend:
+            F[0, 1] = 1  # トレンド項を含める
         for i, seasonal_weight in enumerate(seasonal_weights):
             start_idx = self.non_seasonal_dim + 2 * i  # 季節成分の開始インデックス
             F[start_idx:start_idx + 2, start_idx:start_idx + 2] = seasonal_weight  # 季節成分の遷移を設定
@@ -147,7 +154,7 @@ class LocalSeasonalModel:
             self.kf.update(observation=observation)  # 更新ステップ
             self.filtered_states.append(self.kf.get_state_estimate())
 
-    def predict_by_steps(self, steps: int = 1) -> list[float]:
+    def predict_by_steps(self, steps: int = 1, decay_factor: float = 0.9) -> list[float]:
         """
         ステップ数分の予測を行う
 
@@ -155,6 +162,8 @@ class LocalSeasonalModel:
         ----------
         steps : int, optional
             予測するステップ数
+        decay_factor : float, optional
+            トレンド項に適用する減衰因子
 
         Returns
         -------
@@ -163,12 +172,13 @@ class LocalSeasonalModel:
         """
         # 最後の状態推定（最初の状態推定は予測に含めない）
         last_state_estimate = self.filtered_states[-1]
-
         # 30日間の予測を行う
         forecasted_states = []  # 初期状態を省いて予測を開始
-        for _ in range(steps):
+        for step in range(steps):
             # 状態遷移行列Fを使って、次の日の状態を予測
             next_state = self.F @ last_state_estimate
+            if self.include_trend:
+                next_state[1] *= decay_factor ** step  # トレンド項に減衰因子を適用
             forecasted_states.append(next_state)
             last_state_estimate = next_state  # 次の状態を更新
 
