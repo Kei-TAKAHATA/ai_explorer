@@ -6,7 +6,8 @@ dir:
 data:
   train_data_name: "train.csv"
   test_data_name: "test.csv"
-  target_columns: ["target_column"]
+  train_columns: ["train_column1", "train_column2"]
+  predict_columns: ["predict_column1"]
   output_file_base_name: "test1"
 
 model:
