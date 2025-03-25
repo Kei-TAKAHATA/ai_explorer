@@ -4,6 +4,12 @@ import pandas as pd
 
 
 class DataManager:
+    """
+    データ管理を行うクラス。
+
+    データセットの読み込み、保存、およびディレクトリの管理を行う。
+    """
+
     def __init__(self, root_dir, settings):
         self.root_dir = root_dir
         self.settings = settings
@@ -20,6 +26,14 @@ class DataManager:
         self.output_file_base_name = settings["data"]["output_file_base_name"]
 
     def load_train_and_test_data(self):
+        """
+        トレーニングデータとテストデータを読み込む。
+
+        Returns
+        ----
+        tuple
+            トレーニングデータとテストデータの DataFrame。
+        """
         train_file_path = os.path.join(self.root_dir, self.datasets_dir, self.input_dir, self.train_data_name)
         test_file_path = os.path.join(self.root_dir, self.datasets_dir, self.input_dir, self.test_data_name)
         train_df = pd.read_csv(train_file_path, encoding="utf-8")
@@ -27,10 +41,21 @@ class DataManager:
         return train_df, test_df
 
     def save_df_data(self, df, prefix="", suffix=""):
+        """
+        DataFrame を CSV ファイルとして保存する。
+
+        Parameters
+        ----
+        df : DataFrame
+            保存するデータ。
+        prefix : str, optional
+            ファイル名の接頭辞。
+        suffix : str, optional
+            ファイル名の接尾辞。
+        """
         # 日付_時間_ベース名_追加オプション.csv
         file_name = f"{prefix}_{self.output_file_base_name}_{suffix}.csv"
         file_path = os.path.join(self.root_dir, self.datasets_dir, self.output_dir, file_name)
-        # import pdb; pdb.set_trace()
         df.to_csv(file_path, index=False)
         # 権限変更
         os.chmod(file_path, 0o777)
