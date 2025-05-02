@@ -11,6 +11,9 @@
 *.tsv
 *.csv
 
+# notebookファイル
+*.ipynb
+
 # notebookのチェックポイント
 .ipynb_checkpoints
 
