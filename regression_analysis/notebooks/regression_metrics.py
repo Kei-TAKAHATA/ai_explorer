@@ -123,6 +123,7 @@ def calculate_mae(df: pd.DataFrame, actual_column: str, predicted_column: str) -
 def calculate_mape(df: pd.DataFrame, actual_column: str, predicted_column: str) -> float:
     """
     MAPE（Mean Absolute Percentage Error）を計算する関数
+    実績値が0の場合は計算できないため、0の行を削除して計算
     MAPE = 100 * 1/n * sum(| (y - y_hat) / y |)
 
     Parameters
@@ -161,6 +162,7 @@ def calculate_mape(df: pd.DataFrame, actual_column: str, predicted_column: str) 
 def calculate_smape(df: pd.DataFrame, actual_column: str, predicted_column: str) -> float:
     """
     SMAPE（Symmetric Mean Absolute Percentage Error）を計算する関数
+    実績値と予測値の絶対値の合計が0の場合は計算できないため、その場合は0の行を削除して計算
     SMAPE = 100 * 1/n * sum(| (y - y_hat) / ( |y| + |y_hat| ) / 2 |)
 
     Parameters
