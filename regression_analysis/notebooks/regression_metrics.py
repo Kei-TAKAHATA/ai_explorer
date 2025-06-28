@@ -3,18 +3,55 @@
 
 # # 回帰モデルの評価指標比較_テックブログ用
 
-# ## ライブラリのimport
+# # ルートディレクトリの取得
 
-# In[1]:
+# In[ ]:
+
+
+import os
+import sys
+
+def get_ancestor_directory(path, levels=1):
+    """
+    指定した階層数だけ上の親ディレクトリを取得します。
+
+    Parameters:
+    path (str): 基準となるディレクトリのパス。
+    levels (int): 上に移動する階層数。デフォルトは1。
+
+    Returns:
+    str: 指定した階層数だけ上の親ディレクトリのパス。
+    """
+    for _ in range(levels):
+        path = os.path.dirname(path)
+    return path
+
+# 使用例
+current_directory = os.getcwd()
+# ai_explorer直下のライブラリをimportするため、2階層上のディレクトリを取得
+root_directory = get_ancestor_directory(current_directory, levels=2)
+
+print("現在のディレクトリ:", current_directory)
+print("ルートディレクトリ:", root_directory)
+sys.path.append(os.path.abspath(root_directory))
+
+
+# # ライブラリのimport
+
+# In[2]:
 
 
 import numpy as np
 import pandas as pd
 
+from utils.graph_creator import GraphCreator
+
+graph_creator = GraphCreator()
+
 
 # ## 使用するメソッド
 
-# In[2]:
+# In[3]:
 
 
 # RMSEの計算
@@ -86,6 +123,7 @@ def calculate_mae(df: pd.DataFrame, actual_column: str, predicted_column: str) -
 def calculate_mape(df: pd.DataFrame, actual_column: str, predicted_column: str) -> float:
     """
     MAPE（Mean Absolute Percentage Error）を計算する関数
+    実績値が0の場合は計算できないため、0の行を削除して計算
     MAPE = 100 * 1/n * sum(| (y - y_hat) / y |)
 
     Parameters
@@ -124,6 +162,7 @@ def calculate_mape(df: pd.DataFrame, actual_column: str, predicted_column: str) 
 def calculate_smape(df: pd.DataFrame, actual_column: str, predicted_column: str) -> float:
     """
     SMAPE（Symmetric Mean Absolute Percentage Error）を計算する関数
+    実績値と予測値の絶対値の合計が0の場合は計算できないため、その場合は0の行を削除して計算
     SMAPE = 100 * 1/n * sum(| (y - y_hat) / ( |y| + |y_hat| ) / 2 |)
 
     Parameters
@@ -250,7 +289,7 @@ def calculate_r2(df: pd.DataFrame, actual_column: str, predicted_column: str) ->
     return r2
 
 
-# In[3]:
+# In[4]:
 
 
 def calculate_metrics(df: pd.DataFrame, actual_column: str, predicted_column: str) -> pd.DataFrame:
@@ -300,6 +339,23 @@ df
 # In[ ]:
 
 
+print(df.to_markdown(index=False))
+
+
+# In[ ]:
+
+
+graph_creator.plot_line_graph(
+    df,
+    x_column="date",
+    plot_columns=["y", "predicted_1", "predicted_2"],
+    figsize=(2.5, 7)
+)
+
+
+# In[ ]:
+
+
 predicted_columns = [column for column in df.columns if column.startswith("predicted_")]
 
 result = []
@@ -307,7 +363,14 @@ actual_column = "y"
 for predicted_column in predicted_columns:
     result.append(calculate_metrics(df, actual_column, predicted_column))
 
-pd.concat(result, axis=1)
+result_df = pd.concat(result, axis=1)
+result_df
+
+
+# In[ ]:
+
+
+print(result_df.round(2).to_markdown())
 
 
 # In[ ]:
