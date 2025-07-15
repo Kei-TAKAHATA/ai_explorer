@@ -51,7 +51,7 @@ graph_creator = GraphCreator()
 
 # ## 使用するメソッド
 
-# In[3]:
+# In[9]:
 
 
 # RMSEの計算
@@ -87,6 +87,104 @@ def calculate_rmse(df: pd.DataFrame, actual_column: str, predicted_column: str) 
     rmse = np.sqrt(mean_squared_error)
 
     return rmse
+
+# RMSPEの計算
+def calculate_rmspe(df: pd.DataFrame, actual_column: str, predicted_column: str) -> float:
+    """
+    RMSPE（Root Mean Square Percentage Error）を計算する関数
+    実績値が0の場合は計算できないため、0の行を削除して計算
+    RMSPE = sqrt(1/n * sum((y - y_hat) / y)^2)
+
+    Parameters
+    ----------
+    df : pd.DataFrame
+        データフレーム
+    actual_column : str
+        実測値の列名
+    predicted_column : str
+        予測値の列名
+
+    Returns
+    -------
+    float
+        RMSPEの値
+    """
+    # 実績値が0の場合は計算できないため、0の行を削除
+    df = df[df[actual_column] != 0].copy()
+
+    # 実測値と予測値の差を計算
+    error = df[actual_column] - df[predicted_column]
+    error_rate = error / df[actual_column]
+    squared_error_rate = error_rate ** 2
+
+    # 平均を計算
+    mean_squared_error_rate = squared_error_rate.mean()
+
+    # 平方根を計算
+    rmspe = np.sqrt(mean_squared_error_rate)
+
+    return rmspe
+
+# NRMSEの計算
+def calculate_nrmse(
+    df: pd.DataFrame,
+    actual_column: str,
+    predicted_column: str,
+    denominator: str = "mean"
+) -> float:
+    """
+    NRMSE（Normalized Root Mean Square Error）を計算する関数
+    デフォルトでは平均値を分母に使用
+    平均使用時の数式: NRMSE = (1 / mean(y)) * sqrt(1/n * sum((y - y_hat)^2))
+    最大値最小値使用時の数式: NRMSE = (1 / (max(y) - min(y))) * sqrt(1/n * sum((y - y_hat)^2))
+    標準偏差使用時の数式: NRMSE = (1 / std(y)) * sqrt(1/n * sum((y - y_hat)^2))
+    IQR使用時の数式: NRMSE = (1 / IQR(y)) * sqrt(1/n * sum((y - y_hat)^2))
+
+    Parameters
+    ----------
+    df : pd.DataFrame
+        データフレーム
+    actual_column : str
+        実測値の列名
+    predicted_column : str
+        予測値の列名
+    denominator : str, optional
+        正規化に使う分母の種類（"mean", "min_max", "std"）
+
+    Returns
+    -------
+    float
+        NRMSEの値
+    """
+    y = df[actual_column]
+    if denominator == "mean":
+    # 実測値の平均を計算
+        denominator_value = y.mean()
+    elif denominator == "min_max":
+        denominator_value = y.max() - y.min()
+    elif denominator == "std":
+        denominator_value = y.std()
+    elif denominator == "iqr":
+        denominator_value = y.quantile(0.75) - y.quantile(0.25)
+    else:
+        raise ValueError("denominator must be 'mean', 'min_max', 'std', or 'iqr'")
+
+    # 実測値と予測値の差を計算
+    error = df[actual_column] - df[predicted_column]
+
+    # 差の二乗を計算
+    squared_error = error ** 2
+
+    # 差の二乗の平均を計算
+    mean_squared_error = squared_error.mean()
+
+    # 平方根を計算
+    rmse = np.sqrt(mean_squared_error)
+
+    # NRMSEを計算
+    nrmse = rmse / denominator_value
+
+    return nrmse
 
 # MAEの計算
 def calculate_mae(df: pd.DataFrame, actual_column: str, predicted_column: str) -> float:
@@ -289,7 +387,7 @@ def calculate_r2(df: pd.DataFrame, actual_column: str, predicted_column: str) ->
     return r2
 
 
-# In[4]:
+# In[16]:
 
 
 def calculate_metrics(df: pd.DataFrame, actual_column: str, predicted_column: str) -> pd.DataFrame:
@@ -312,6 +410,11 @@ def calculate_metrics(df: pd.DataFrame, actual_column: str, predicted_column: st
     """
     metrics = {
         "RMSE": calculate_rmse(df, actual_column, predicted_column),
+        "RMSPE": calculate_rmspe(df, actual_column, predicted_column),
+        "NRMSE_mean": calculate_nrmse(df, actual_column, predicted_column),
+        # "NRMSE_min_max": calculate_nrmse(df, actual_column, predicted_column, denominator="min_max"),
+        # "NRMSE_std": calculate_nrmse(df, actual_column, predicted_column, denominator="std"),
+        # "NRMSE_iqr": calculate_nrmse(df, actual_column, predicted_column, denominator="iqr"),
         "MAE": calculate_mae(df, actual_column, predicted_column),
         "MAPE": calculate_mape(df, actual_column, predicted_column),
         "SMAPE": calculate_smape(df, actual_column, predicted_column),
