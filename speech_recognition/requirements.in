@@ -1,0 +1,23 @@
+# テスト関連
+pytest
+
+# データ処理・分析
+pandas
+polars
+pyyaml
+
+# 可視化
+matplotlib
+seaborn
+tabulate
+
+# システム・環境
+psutil
+python-dotenv
+
+# 開発環境
+pip-tools
+
+# 音声認識
+openai-whisper
+-e ./libs/ReazonSpeech/pkg/nemo-asr
