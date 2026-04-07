@@ -1,0 +1,29 @@
+# テスト関連
+pytest
+
+# 高速化
+numba
+
+# データ処理・分析
+pandas
+polars
+pyyaml
+
+# 可視化
+matplotlib
+seaborn
+tabulate
+
+# システム・環境
+psutil
+python-dotenv
+
+# 機械学習
+scikit-learn
+
+# 開発環境
+jupyterlab
+pip-tools
+
+# 日本語対応
+japanize_matplotlib
