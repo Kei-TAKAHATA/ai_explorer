@@ -139,11 +139,8 @@ task_x/
 ```bash
 conda create -n ai_explorer python=3.11 -y
 conda activate ai_explorer
-```
 
-`pip-tools`のinstall
-
-```bash
+# `pip-tools`のinstall
 pip install pip-tools
 ```
 
@@ -159,90 +156,32 @@ conda activate ai_explorer
 新規でライブラリをinstallした場合、
 `requirements.in`にライブラリを追加。
 
-以下のコマンドを実行し`requirements.txt`を更新。
-
-### ライブラリのバージョンを更新しなくて良い場合
-`pip-tools`のアップグレード
-
 ```bash
+cd ~/workspace/ai_explorer
+conda activate ai_explorer
+# `pip-tools`, `pip`のアップグレード
 pip install --upgrade pip-tools
-```
-
-`pip`のアップグレード
-
-```bash
 pip install --upgrade pip
-```
 
-```bash
-pip-compile requirements.in
-```
-
-### ライブラリのバージョンを更新する場合
-`pip-tools`のアップグレード
-
-```bash
-pip install --upgrade pip-tools
-```
-
-`pip`のアップグレード
-
-```bash
-pip install --upgrade pip
-```
-
-```bash
+# requirements.txtの更新
 pip-compile requirements.in --upgrade
-```
-
-現場のconda環境を落とし、新規でconda環境を作成し、`requirements.txt`からインストール
-
-```bash
+# 現場のconda環境を落とし、新規でconda環境を作成し、`requirements.txt`からインストール
 conda deactivate
-```
-
-```bash
 conda create -n ai_explorer_x python=3.11 -y
-```
-
-```bash
 conda activate ai_explorer_x
-```
-
-```bash
 pip install -r requirements.txt
-```
-
-動作確認後、`requirements.in`と`requirements.txt`をコミット
-
-以下のコマンドでconda用の`enviromnent.yml`の更新
-
-```bash
+# 以下のコマンドでconda用の`enviromnent.yml`の更新
 conda env export --no-builds | grep -v "^prefix:" > environment.yml
+# pytest
+conda deactivate
+conda remove -n ai_explorer_x --all -y
 ```
 
 `name`の`ai_explorer_x`を`ai_explorer`に更新してコミット
-
-push。
-
-動作確認用のconda環境を停止して削除する。
-
-```bash
-conda deactivate
-```
-
-動作確認用のconda環境を削除
-
-```bash
-conda remove -n ai_explorer_x --all -y
-```
 
 conda環境の更新
 
 ```bash
 conda env create -f environment.yml -y
-```
-
-```bash
 conda activate ai_explorter
 ```
