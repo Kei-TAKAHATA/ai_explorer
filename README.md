@@ -1,6 +1,47 @@
 # ai_explorer
 AIに関連する処理を幅広く行うプロジェクト
 
+## プロジェクト一覧
+
+- `regression_analysis`: 回帰モデル
+- `speech_recognition`: 音声認識処理
+- `time_series_forecasting`: 時系列予測
+- `shared`: 複数プロジェクトから参照する軽量な共通処理を配置
+
+各子ディレクトリは、依存ライブラリの競合を避けるため、原則として個別の実行環境を持つ。
+
+
+## リポジトリ構成
+
+- 各サブプロジェクトは独立した依存関係を持つ
+- ルートでは単一の Python 実行環境を管理しない
+- Python の依存関係と実行環境は各サブプロジェクト配下で管理する
+
+## 開発方針
+
+- 共通化は最小限にとどめる
+- 重い依存を持つ処理は各プロジェクト内に保持する
+- サブプロジェクト間の直接 import は原則避ける
+- notebook 出力や生成物は原則 Git 管理しない
+
+## Python 実行環境
+
+- スクリプトやテストは、対象コードを持つサブプロジェクトの環境で実行する
+- 詳細なセットアップや実行方法は各サブプロジェクトの `README.md` を参照する
+
+## 共通処理の扱い
+
+- 共通処理は原則として軽量なライブラリに限定する
+- 共通処理の実行は、利用側のサブプロジェクトの環境で行う
+- BigQuery、AWS、機械学習フレームワークなどの重い依存を持つ処理は各プロジェクト内で管理する
+
+## ドキュメント運用
+
+- 全体で共通利用するドキュメントテンプレートは `docs/implementation_note_templates/` に置く
+- 特定プロジェクトが主担当の実装メモは、そのプロジェクト配下の `docs/implementation_notes/` に置く
+- CI 整理、モノレポ移行、共通基盤化のような横断テーマはルート `docs/implementation_notes/` に置く
+
+
 ## ディレクトリ構造
 以下の構成になるように進める
 
@@ -90,3 +131,118 @@ task_x/
 | refactor | コードのリファクタリング（動作に影響しない） | [refactor]モデルの構造を整理 |
 | chore | その他の変更（パッケージ更新、ビルドプロセスの変更など） | [chore]依存パッケージを更新 |
 | test  | テストコードの追加・修正   | [test]estimateのユニットテスト追加 |
+
+## 実行環境
+以下の手順で環境をセットアップしてください。
+
+`environment.yml`がない場合
+```bash
+conda create -n ai_explorer python=3.11 -y
+conda activate ai_explorer
+```
+
+`pip-tools`のinstall
+
+```bash
+pip install pip-tools
+```
+
+---
+
+`environment.yml`がある場合
+```bash
+conda env create -f environment.yml -y
+conda activate ai_explorer
+```
+
+## 実行環境の更新
+新規でライブラリをinstallした場合、
+`requirements.in`にライブラリを追加。
+
+以下のコマンドを実行し`requirements.txt`を更新。
+
+### ライブラリのバージョンを更新しなくて良い場合
+`pip-tools`のアップグレード
+
+```bash
+pip install --upgrade pip-tools
+```
+
+`pip`のアップグレード
+
+```bash
+pip install --upgrade pip
+```
+
+```bash
+pip-compile requirements.in
+```
+
+### ライブラリのバージョンを更新する場合
+`pip-tools`のアップグレード
+
+```bash
+pip install --upgrade pip-tools
+```
+
+`pip`のアップグレード
+
+```bash
+pip install --upgrade pip
+```
+
+```bash
+pip-compile requirements.in --upgrade
+```
+
+現場のconda環境を落とし、新規でconda環境を作成し、`requirements.txt`からインストール
+
+```bash
+conda deactivate
+```
+
+```bash
+conda create -n ai_explorer_x python=3.11 -y
+```
+
+```bash
+conda activate ai_explorer_x
+```
+
+```bash
+pip install -r requirements.txt
+```
+
+動作確認後、`requirements.in`と`requirements.txt`をコミット
+
+以下のコマンドでconda用の`enviromnent.yml`の更新
+
+```bash
+conda env export --no-builds | grep -v "^prefix:" > environment.yml
+```
+
+`name`の`ai_explorer_x`を`ai_explorer`に更新してコミット
+
+push。
+
+動作確認用のconda環境を停止して削除する。
+
+```bash
+conda deactivate
+```
+
+動作確認用のconda環境を削除
+
+```bash
+conda remove -n ai_explorer_x --all -y
+```
+
+conda環境の更新
+
+```bash
+conda env create -f environment.yml -y
+```
+
+```bash
+conda activate ai_explorter
+```
