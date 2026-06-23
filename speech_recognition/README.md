@@ -5,24 +5,16 @@
 ## 実行環境
 以下の手順で環境をセットアップしてください。
 
-PyPI、condaで配布されてないReazonSpeechを利用するため、`environment.yml`ではなく、
-`requirements.in`と`requirements.txt`で管理する運用にする。
-
-### `requirements.txt`がない場合
+### `environment.yml`がない場合
 ```bash
-conda create -n speech_recognition python=3.10 -y
+cd ~/workspace/ai_explorer/speech_recognition
+conda create -n speech_recognition python=3.11 -y
 conda activate speech_recognition
-```
 
-`pip-tools`のinstall
-
-```bash
+# `pip-tools`のinstall
 pip install pip-tools
-``` 
 
-### ReazonSpeechのインストール
-ReazonSpeechの公式ページに従ってインストールします。
-```bash
+# ReazonSpeechの公式ページに従ってReazonSpeechをインストール
 cd speech_recognition/libs
 git clone https://github.com/reazon-research/ReazonSpeech
 pip install ReazonSpeech/pkg/nemo-asr  # or k2-asr, espnet-asr or espnet-oneseg
@@ -30,60 +22,30 @@ pip install ReazonSpeech/pkg/nemo-asr  # or k2-asr, espnet-asr or espnet-oneseg
 
 ---
 
-### `requirements.txt`がある場合
-
-現状のconda環境を停止して削除する。
+### `environment.yml`がある場合
 
 ```bash
-conda deactivate
-```
-
-conda環境を削除
-
-```bash
-conda remove -n speech_recognition --all -y
-```
-
-## 実行環境の更新
-新規でライブラリをinstallした場合、
-`requirements.in`にライブラリを追加。
-
-以下のコマンドを実行し`requirements.txt`を更新。
-
-### ディレクトリ移動
-```bash
-cd speech_recognition
-```
-
-### ライブラリのバージョンを更新しなくて良い場合
-```bash
-pip-compile requirements.in
-```
-
-### ライブラリのバージョンを更新する場合
-```bash
+cd ~/workspace/ai_explorer/speech_recognition
+conda activate speech_recognition
+pip install --upgrade pip-tools
+pip install --upgrade pip
 pip-compile requirements.in --upgrade
-```
-
-現場のconda環境を落とし、新規でconda環境を作成し、`requirements.txt`からインストール
-
-```bash
 conda deactivate
+conda create -n speech_recognition_x python=3.11 -y
+conda activate speech_recognition_x
+pip install -r requirements.txt
+conda env export --no-builds | grep -v "^prefix:" > environment.yml
+conda deactivate
+conda remove -n speech_recognition_x --all -y
 ```
 
-```bash
-conda create -n speech_recognition python=3.10 -y
-```
+`name`の`speech_recognition_x`を`speech_recognition`に更新
 
 ```bash
+conda env create -f environment.yml -y
 conda activate speech_recognition
 ```
 
-```bash
-pip install -r requirements.txt
-```
-
-動作確認後、`requirements.in`と`requirements.txt`をコミット
 
 ## 実行方法
 
