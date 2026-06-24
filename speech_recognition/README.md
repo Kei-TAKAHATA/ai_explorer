@@ -15,9 +15,9 @@ conda activate speech_recognition
 pip install pip-tools
 
 # ReazonSpeechの公式ページに従ってReazonSpeechをインストール
-cd libs
-git clone https://github.com/reazon-research/ReazonSpeech
-pip install ReazonSpeech/pkg/nemo-asr  # or k2-asr, espnet-asr or espnet-oneseg
+git clone https://github.com/reazon-research/ReazonSpeech libs/ReazonSpeech
+python -m pip install -e ./libs/ReazonSpeech/pkg/nemo-asr  # or k2-asr, espnet-asr or espnet-oneseg
+# pip install ReazonSpeech/pkg/nemo-asr  # or k2-asr, espnet-asr or espnet-oneseg
 ```
 
 ---
@@ -27,9 +27,12 @@ pip install ReazonSpeech/pkg/nemo-asr  # or k2-asr, espnet-asr or espnet-oneseg
 ```bash
 cd ~/workspace/ai_explorer/speech_recognition
 conda activate speech_recognition
-pip install --upgrade pip-tools
-pip install --upgrade pip
+pip install --upgrade pip pip-tools
+mkdir -p libs
+git -C libs/ReazonSpeech pull --ff-only
+pip install -e ./libs/ReazonSpeech/pkg/nemo-asr
 pip-compile requirements.in --upgrade
+
 conda deactivate
 conda create -n speech_recognition_x python=3.11 -y
 conda activate speech_recognition_x
