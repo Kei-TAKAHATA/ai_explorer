@@ -18,7 +18,7 @@ aiohttp==3.14.1
     # via fsspec
 aiosignal==1.4.0
     # via aiohttp
-alembic==1.18.4
+alembic==1.18.5
     # via optuna
 annotated-types==0.7.0
     # via pydantic
@@ -26,7 +26,7 @@ antlr4-python3-runtime==4.9.3
     # via
     #   hydra-core
     #   omegaconf
-anyio==4.14.0
+anyio==4.14.1
     # via httpx
 asttokens==3.0.1
     # via stack-data
@@ -52,7 +52,7 @@ cffi==2.0.0
     # via soundfile
 charset-normalizer==3.4.7
     # via requests
-click==8.4.1
+click==8.4.2
     # via
     #   jiwer
     #   lhotse
@@ -152,7 +152,7 @@ iniconfig==2.3.0
     # via pytest
 intervaltree==3.2.1
     # via lhotse
-ipython==9.14.1
+ipython==9.15.0
     # via mediapy
 ipython-pygments-lexers==1.1.1
     # via ipython
@@ -358,9 +358,9 @@ platformdirs==4.10.0
     #   wandb
 pluggy==1.6.0
     # via pytest
-polars==1.41.2
+polars==1.42.0
     # via -r requirements.in
-polars-runtime-32==1.41.2
+polars-runtime-32==1.42.0
     # via polars
 pooch==1.9.0
     # via librosa
@@ -453,7 +453,7 @@ pyyaml==6.0.3
     #   webdataset
 rapidfuzz==3.14.5
     # via jiwer
-regex==2026.5.9
+regex==2026.6.28
     # via
     #   sacrebleu
     #   sacremoses
@@ -624,7 +624,7 @@ urllib3==2.7.0
     #   sentry-sdk
 wandb==0.28.0
     # via nemo-toolkit
-wcwidth==0.8.1
+wcwidth==0.8.2
     # via prompt-toolkit
 webdataset==1.0.2
     # via nemo-toolkit
@@ -638,7 +638,7 @@ whisper-normalizer==0.1.12
     # via nemo-toolkit
 wrapt==2.2.2
     # via nemo-toolkit
-xxhash==3.7.0
+xxhash==3.8.0
     # via datasets
 yarl==1.24.2
     # via aiohttp
