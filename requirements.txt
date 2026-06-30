@@ -4,7 +4,7 @@
 #
 #    pip-compile requirements.in
 #
-anyio==4.14.0
+anyio==4.14.1
     # via
     #   httpx
     #   jupyter-server
@@ -41,7 +41,7 @@ cffi==2.0.0
     # via argon2-cffi-bindings
 charset-normalizer==3.4.7
     # via requests
-click==8.4.1
+click==8.4.2
     # via pip-tools
 comm==0.2.3
     # via ipykernel
@@ -79,7 +79,7 @@ iniconfig==2.3.0
     # via pytest
 ipykernel==7.3.0
     # via jupyterlab
-ipython==9.14.1
+ipython==9.15.0
     # via ipykernel
 ipython-pygments-lexers==1.1.1
     # via ipython
@@ -137,7 +137,7 @@ jupyter-server==2.20.0
     #   notebook-shim
 jupyter-server-terminals==0.5.4
     # via jupyter-server
-jupyterlab==4.6.0
+jupyterlab==4.6.1
     # via -r requirements.in
 jupyterlab-pygments==0.3.0
     # via nbconvert
@@ -222,9 +222,9 @@ platformdirs==4.10.0
     # via jupyter-core
 pluggy==1.6.0
     # via pytest
-polars==1.41.2
+polars==1.42.0
     # via -r requirements.in
-polars-runtime-32==1.41.2
+polars-runtime-32==1.42.0
     # via polars
 prometheus-client==0.25.0
     # via jupyter-server
@@ -357,7 +357,7 @@ uri-template==1.3.0
     # via jsonschema
 urllib3==2.7.0
     # via requests
-wcwidth==0.8.1
+wcwidth==0.8.2
     # via prompt-toolkit
 webcolors==25.10.0
     # via jsonschema
