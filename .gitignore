@@ -23,3 +23,6 @@
 
 # secret_directoryの追加
 secret_directory/
+
+# speech_recognitionのenvironment.yml
+speech_recognition/environment.yml
