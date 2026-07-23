@@ -6,15 +6,15 @@
 #
 -e ./libs/ReazonSpeech/pkg/nemo-asr
     # via -r requirements.in
-absl-py==2.4.0
+absl-py==2.5.0
     # via
     #   fiddle
     #   tensorboard
 accelerate==1.14.0
     # via peft
-aiohappyeyeballs==2.6.2
+aiohappyeyeballs==2.7.1
     # via aiohttp
-aiohttp==3.14.1
+aiohttp==3.14.3
     # via fsspec
 aiosignal==1.4.0
     # via aiohttp
@@ -26,9 +26,9 @@ antlr4-python3-runtime==4.9.3
     # via
     #   hydra-core
     #   omegaconf
-anyio==4.14.1
+anyio==4.14.2
     # via httpx
-asttokens==3.0.1
+asttokens==3.0.2
     # via stack-data
 attrs==26.1.0
     # via aiohttp
@@ -42,15 +42,15 @@ braceexpand==0.1.7
     #   webdataset
 build==1.5.0
     # via pip-tools
-certifi==2026.6.17
+certifi==2026.7.22
     # via
     #   httpcore
     #   httpx
     #   requests
     #   sentry-sdk
-cffi==2.0.0
+cffi==2.1.0
     # via soundfile
-charset-normalizer==3.4.7
+charset-normalizer==3.4.9
     # via requests
 click==8.4.2
     # via
@@ -58,13 +58,12 @@ click==8.4.2
     #   lhotse
     #   pip-tools
     #   sacremoses
-    #   typer
     #   wandb
 cloudpickle==3.1.2
     # via nemo-toolkit
 colorama==0.4.6
     # via sacrebleu
-colorlog==6.10.1
+colorlog==6.11.0
     # via optuna
 contourpy==1.3.3
     # via matplotlib
@@ -90,7 +89,7 @@ executing==2.2.1
     # via stack-data
 fiddle==0.3.0
     # via nemo-toolkit
-filelock==3.29.4
+filelock==3.32.0
     # via
     #   datasets
     #   huggingface-hub
@@ -110,17 +109,13 @@ fsspec[http]==2024.12.0
     #   nemo-toolkit
     #   pytorch-lightning
     #   torch
-gitdb==4.0.12
-    # via gitpython
-gitpython==3.1.50
-    # via wandb
 graphviz==0.21
     # via fiddle
-grpcio==1.81.1
+grpcio==1.82.1
     # via tensorboard
 h11==0.16.0
     # via httpcore
-hf-xet==1.5.1
+hf-xet==1.5.2
     # via huggingface-hub
 httpcore==1.0.9
     # via httpx
@@ -192,7 +187,7 @@ lightning-utilities==0.15.3
     #   lightning
     #   pytorch-lightning
     #   torchmetrics
-llvmlite==0.47.0
+llvmlite==0.48.0
     # via numba
 lxml==6.1.1
     # via sacrebleu
@@ -207,7 +202,7 @@ markupsafe==3.0.3
     #   werkzeug
 marshmallow==4.3.0
     # via nemo-toolkit
-matplotlib==3.11.0
+matplotlib==3.11.1
     # via
     #   -r requirements.in
     #   mediapy
@@ -233,7 +228,7 @@ multidict==6.7.1
     #   yarl
 multiprocess==0.70.19
     # via datasets
-narwhals==2.22.1
+narwhals==2.24.0
     # via scikit-learn
 nemo-toolkit[asr]==2.7.3
     # via
@@ -241,7 +236,7 @@ nemo-toolkit[asr]==2.7.3
     #   reazonspeech-nemo-asr
 networkx==3.6.1
     # via torch
-numba==0.65.1
+numba==0.66.0
     # via
     #   librosa
     #   nemo-toolkit
@@ -330,7 +325,7 @@ packaging==24.2
     #   transformers
     #   wandb
     #   wheel
-pandas==3.0.3
+pandas==3.0.5
     # via
     #   -r requirements.in
     #   datasets
@@ -345,22 +340,22 @@ peft==0.19.1
     # via nemo-toolkit
 pexpect==4.9.0
     # via ipython
-pillow==12.2.0
+pillow==12.3.0
     # via
     #   matplotlib
     #   mediapy
     #   tensorboard
-pip-tools==7.5.3
+pip-tools==7.6.0
     # via -r requirements.in
-platformdirs==4.10.0
+platformdirs==4.11.0
     # via
     #   pooch
     #   wandb
 pluggy==1.6.0
     # via pytest
-polars==1.42.0
+polars==1.43.0
     # via -r requirements.in
-polars-runtime-32==1.42.0
+polars-runtime-32==1.43.0
     # via polars
 pooch==1.9.0
     # via librosa
@@ -397,7 +392,7 @@ pyannote-database==6.1.1
     # via pyannote-metrics
 pyannote-metrics==4.1
     # via nemo-toolkit
-pyarrow==24.0.0
+pyarrow==25.0.0
     # via datasets
 pycparser==3.0
     # via cffi
@@ -414,7 +409,6 @@ pygments==2.20.0
     #   ipython
     #   ipython-pygments-lexers
     #   pytest
-    #   rich
 pyloudnorm==0.2.0
     # via nemo-toolkit
 pyparsing==3.3.2
@@ -453,7 +447,7 @@ pyyaml==6.0.3
     #   webdataset
 rapidfuzz==3.14.5
     # via jiwer
-regex==2026.6.28
+regex==2026.7.19
     # via
     #   sacrebleu
     #   sacremoses
@@ -495,14 +489,12 @@ scipy==1.17.1
     #   scikit-learn
 seaborn==0.13.2
     # via -r requirements.in
-sentencepiece==0.2.1
+sentencepiece==0.2.2
     # via nemo-toolkit
-sentry-sdk==2.63.0
+sentry-sdk==2.66.1
     # via wandb
 six==1.17.0
     # via python-dateutil
-smmap==5.0.3
-    # via gitdb
 sortedcontainers==2.4.0
     # via
     #   intervaltree
@@ -551,7 +543,7 @@ toml==0.10.2
     # via nv-one-logger-core
 toolz==1.1.0
     # via cytoolz
-torch==2.12.1
+torch==2.13.0
     # via
     #   accelerate
     #   lhotse
@@ -567,7 +559,7 @@ torchmetrics==1.9.0
     #   lightning
     #   nemo-toolkit
     #   pytorch-lightning
-tqdm==4.68.3
+tqdm==4.69.0
     # via
     #   datasets
     #   huggingface-hub
@@ -590,7 +582,7 @@ transformers==4.57.6
     #   peft
 typeguard==4.5.2
     # via inflect
-typing-extensions==4.15.0
+typing-extensions==4.16.0
     # via
     #   aiohttp
     #   aiosignal
@@ -622,7 +614,7 @@ urllib3==2.7.0
     # via
     #   requests
     #   sentry-sdk
-wandb==0.28.0
+wandb==0.28.1
     # via nemo-toolkit
 wcwidth==0.8.2
     # via prompt-toolkit
@@ -634,13 +626,13 @@ wget==3.2
     # via nemo-toolkit
 wheel==0.47.0
     # via pip-tools
-whisper-normalizer==0.1.12
+whisper-normalizer==0.1.14
     # via nemo-toolkit
 wrapt==2.2.2
     # via nemo-toolkit
-xxhash==3.8.0
+xxhash==3.8.1
     # via datasets
-yarl==1.24.2
+yarl==1.24.5
     # via aiohttp
 
 # The following packages are considered to be unsafe in a requirements file:
