@@ -20,35 +20,98 @@ python -m pip install -e ./libs/ReazonSpeech/pkg/nemo-asr  # or k2-asr, espnet-a
 # pip install ReazonSpeech/pkg/nemo-asr  # or k2-asr, espnet-asr or espnet-oneseg
 ```
 
+### 初回実行時
+
+```bash
+conda remove -n speech_recognition --all -y
+cd ~/workspace/ai_explorer/speech_recognition
+conda create -n speech_recognition python=3.11 -y
+conda activate speech_recognition
+
+pip install --upgrade pip pip-tools
+mkdir -p libs
+# ReazonSpeechの公式ページに従ってReazonSpeechをインストール
+git clone https://github.com/reazon-research/ReazonSpeech libs/ReazonSpeech
+pip install -e ./libs/ReazonSpeech/pkg/nemo-asr  # or k2-asr, espnet-asr or espnet-oneseg
+
+# git -C libs/ReazonSpeech pull --ff-only
+# pip install -e ./libs/ReazonSpeech/pkg/nemo-asr
+pip-compile requirements.in --upgrade
+pip install -r requirements.txt
+```
+
+### Reazonを入れ直す場合
+
+```bash
+conda remove -n speech_recognition --all -y
+cd ~/workspace/ai_explorer/speech_recognition
+conda create -n speech_recognition python=3.11 -y
+conda activate speech_recognition
+
+pip install --upgrade pip pip-tools
+
+rm -rf libs/ReazonSpeech
+# ReazonSpeechの公式ページに従ってReazonSpeechをインストール
+git clone https://github.com/reazon-research/ReazonSpeech libs/ReazonSpeech
+pip install -e ./libs/ReazonSpeech/pkg/nemo-asr  # or k2-asr, espnet-asr or espnet-oneseg
+
+pip-compile requirements.in --upgrade
+pip install -r requirements.txt
+```
+
+### ライブラリ更新_Reazonは入れ直さない
+
+```bash
+conda remove -n speech_recognition --all -y
+cd ~/workspace/ai_explorer/speech_recognition
+conda create -n speech_recognition python=3.11 -y
+conda activate speech_recognition
+
+pip install --upgrade pip pip-tools
+git -C libs/ReazonSpeech pull --ff-only
+
+rm -rf libs/ReazonSpeech
+pip install -e ./libs/ReazonSpeech/pkg/nemo-asr  # or k2-asr, espnet-asr or espnet-oneseg
+pip-compile requirements.in --upgrade
+pip install -r requirements.txt
+```
+
+
 ---
 
 ### `environment.yml`がある場合
 
 ```bash
+conda remove -n speech_recognition --all -y
 cd ~/workspace/ai_explorer/speech_recognition
+conda create -n speech_recognition python=3.11 -y
 conda activate speech_recognition
+
+pip install --upgrade pip pip-tools
+mkdir -p libs
+git -C libs/ReazonSpeech pull --ff-only
+
+rm -rf libs/ReazonSpeech
+pip install -e ./libs/ReazonSpeech/pkg/nemo-asr  # or k2-asr, espnet-asr or espnet-oneseg
+pip-compile requirements.in --upgrade
+pip install -r requirements.txt
+```
+
+
+
+```bash
+conda remove -n speech_recognition --all -y
+cd ~/workspace/ai_explorer/speech_recognition
+conda create -n speech_recognition python=3.11 -y
+conda activate speech_recognition
+
 pip install --upgrade pip pip-tools
 mkdir -p libs
 git -C libs/ReazonSpeech pull --ff-only
 pip install -e ./libs/ReazonSpeech/pkg/nemo-asr
 pip-compile requirements.in --upgrade
-
-conda deactivate
-conda create -n speech_recognition_x python=3.11 -y
-conda activate speech_recognition_x
 pip install -r requirements.txt
-conda env export --no-builds | grep -v "^prefix:" > environment.yml
-conda deactivate
-conda remove -n speech_recognition_x --all -y
 ```
-
-`name`の`speech_recognition_x`を`speech_recognition`に更新
-
-```bash
-conda env create -f environment.yml -y
-conda activate speech_recognition
-```
-
 
 ## 実行方法
 
