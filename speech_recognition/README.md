@@ -5,25 +5,9 @@
 ## 実行環境の更新
 以下の手順で環境をセットアップしてください。
 
-### `environment.yml`がない場合
-```bash
-cd ~/workspace/ai_explorer/speech_recognition
-conda create -n speech_recognition python=3.11 -y
-conda activate speech_recognition
-
-# `pip-tools`のinstall
-pip install pip-tools
-
-# ReazonSpeechの公式ページに従ってReazonSpeechをインストール
-git clone https://github.com/reazon-research/ReazonSpeech libs/ReazonSpeech
-python -m pip install -e ./libs/ReazonSpeech/pkg/nemo-asr  # or k2-asr, espnet-asr or espnet-oneseg
-# pip install ReazonSpeech/pkg/nemo-asr  # or k2-asr, espnet-asr or espnet-oneseg
-```
-
 ### 初回実行時
 
 ```bash
-conda remove -n speech_recognition --all -y
 cd ~/workspace/ai_explorer/speech_recognition
 conda create -n speech_recognition python=3.11 -y
 conda activate speech_recognition
@@ -32,10 +16,9 @@ pip install --upgrade pip pip-tools
 mkdir -p libs
 # ReazonSpeechの公式ページに従ってReazonSpeechをインストール
 git clone https://github.com/reazon-research/ReazonSpeech libs/ReazonSpeech
-pip install -e ./libs/ReazonSpeech/pkg/nemo-asr  # or k2-asr, espnet-asr or espnet-oneseg
+# nemo-asr or k2-asr, espnet-asr or espnet-oneseg
+pip install -e ./libs/ReazonSpeech/pkg/nemo-asr
 
-# git -C libs/ReazonSpeech pull --ff-only
-# pip install -e ./libs/ReazonSpeech/pkg/nemo-asr
 pip-compile requirements.in --upgrade
 pip install -r requirements.txt
 ```
@@ -53,7 +36,8 @@ pip install --upgrade pip pip-tools
 rm -rf libs/ReazonSpeech
 # ReazonSpeechの公式ページに従ってReazonSpeechをインストール
 git clone https://github.com/reazon-research/ReazonSpeech libs/ReazonSpeech
-pip install -e ./libs/ReazonSpeech/pkg/nemo-asr  # or k2-asr, espnet-asr or espnet-oneseg
+# nemo-asr or k2-asr, espnet-asr or espnet-oneseg
+pip install -e ./libs/ReazonSpeech/pkg/nemo-asr
 
 pip-compile requirements.in --upgrade
 pip install -r requirements.txt
@@ -70,12 +54,29 @@ conda activate speech_recognition
 pip install --upgrade pip pip-tools
 git -C libs/ReazonSpeech pull --ff-only
 
-rm -rf libs/ReazonSpeech
-pip install -e ./libs/ReazonSpeech/pkg/nemo-asr  # or k2-asr, espnet-asr or espnet-oneseg
+# nemo-asr or k2-asr, espnet-asr or espnet-oneseg
+pip install -e ./libs/ReazonSpeech/pkg/nemo-asr
 pip-compile requirements.in --upgrade
 pip install -r requirements.txt
 ```
 
+---
+
+### `environment.yml`がない場合
+```bash
+cd ~/workspace/ai_explorer/speech_recognition
+conda create -n speech_recognition python=3.11 -y
+conda activate speech_recognition
+
+# `pip-tools`のinstall
+pip install pip-tools
+
+# ReazonSpeechの公式ページに従ってReazonSpeechをインストール
+git clone https://github.com/reazon-research/ReazonSpeech libs/ReazonSpeech
+# nemo-asr or k2-asr, espnet-asr or espnet-oneseg
+python -m pip install -e ./libs/ReazonSpeech/pkg/nemo-asr
+# pip install ReazonSpeech/pkg/nemo-asr  # or k2-asr, espnet-asr or espnet-oneseg
+```
 
 ---
 
@@ -92,7 +93,8 @@ mkdir -p libs
 git -C libs/ReazonSpeech pull --ff-only
 
 rm -rf libs/ReazonSpeech
-pip install -e ./libs/ReazonSpeech/pkg/nemo-asr  # or k2-asr, espnet-asr or espnet-oneseg
+# nemo-asr or k2-asr, espnet-asr or espnet-oneseg
+pip install -e ./libs/ReazonSpeech/pkg/nemo-asr
 pip-compile requirements.in --upgrade
 pip install -r requirements.txt
 ```
